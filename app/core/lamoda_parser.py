@@ -1,6 +1,7 @@
 import httpx
 from bs4 import BeautifulSoup
 
+from models.lamoda_models import Product
 from services.mongo import MongoDBService
 
 
@@ -19,9 +20,10 @@ async def parse_lamoda(category_url):
                 try:
                     price = product.find('span', class_='x-product-card-description__price-single').text.strip()
                 except AttributeError:
-                    price = product.find('span', class_='x-product-card-description__price-new').text.strip()
+                    price = float(product.find('span', class_='x-product-card-description__price-new').text.strip())
 
+                product = Product(name=name, brand=brand, price=price)
                 # Insert the parsed data into MongoDB
-                mongo_service.insert_document("lamoda_products", {"name": name, "brand": brand, "price": price})
+                mongo_service.insert_document("lamoda_products", product.dict())
         else:
             print("Page Not Found")

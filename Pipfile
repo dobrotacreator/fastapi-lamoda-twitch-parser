@@ -11,6 +11,8 @@ pymongo = "*"
 httpx = "*"
 beautifulsoup4 = "*"
 pydantic = "==1.*"
+kafka-python = "*"
+redis = "*"
 
 [dev-packages]
 pytest = "*"
