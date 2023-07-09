@@ -1,15 +1,15 @@
 import httpx
 
-from config.twitch_settings import twitch_settings
+from config import settings
 from models.twitch_models import Category, Channel
-from services.mongo import MongoDBService
+from core.mongo import MongoDBService
 
 
 async def get_streams_by_filter(filter_type, query, limit=10):
     token_url = "https://id.twitch.tv/oauth2/token"
     token_params = {
-        "client_id": twitch_settings.client_id,
-        "client_secret": twitch_settings.client_secret,
+        "client_id": settings.twitch_settings.client_id,
+        "client_secret": settings.twitch_settings.client_secret,
         "grant_type": "client_credentials"
     }
     params = {
@@ -26,7 +26,7 @@ async def get_streams_by_filter(filter_type, query, limit=10):
         response_token = await client.post(token_url, data=token_params)
         data_token = response_token.json()
         headers = {
-            "Client-ID": twitch_settings.client_id,
+            "Client-ID": settings.twitch_settings.client_id,
             "Authorization": "Bearer " + data_token["access_token"]
         }
         response = await client.get(url, headers=headers, params=params)

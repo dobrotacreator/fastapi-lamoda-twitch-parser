@@ -1,14 +1,13 @@
 import redis
 from kafka import KafkaProducer, KafkaConsumer
 
-from config.kafka_settings import kafka_settings
-from config.redis_settings import redis_settings
+from config import settings
 
 
 class KafkaService:
     def __init__(self):
-        self.bootstrap_servers = kafka_settings.bootstrap_servers
-        self.redis_client = redis.Redis(host=redis_settings.host, port=redis_settings.port)
+        self.bootstrap_servers = settings.kafka_settings.bootstrap_servers
+        self.redis_client = redis.Redis(host=settings.redis_settings.host, port=settings.redis_settings.port)
 
     def send_message(self, topic, message):
         producer = KafkaProducer(bootstrap_servers=self.bootstrap_servers)

@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException
 
-from services.mongo import MongoDBService
+from core.mongo import MongoDBService
 from models.lamoda_models import Product
 
 router = APIRouter(prefix="/lamoda")

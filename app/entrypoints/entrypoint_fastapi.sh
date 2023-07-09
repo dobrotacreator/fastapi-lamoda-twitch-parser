@@ -5,4 +5,4 @@ until mongo --quiet --eval "db.adminCommand('ping')" &>/dev/null; do
   sleep 5
 done
 
-uvicorn main:app --host 0.0.0.0 --port 8000
+python main.py

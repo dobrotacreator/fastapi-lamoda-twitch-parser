@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException
 
-from services.mongo import MongoDBService
+from core.mongo import MongoDBService
 from models.twitch_models import Category, Channel
 
 router = APIRouter(prefix="/twitch")

@@ -8,4 +8,4 @@ COPY app /parser/
 
 FROM base as fastapi
 RUN chmod +x entrypoints/entrypoint_fastapi.sh
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["python", "main.py"]

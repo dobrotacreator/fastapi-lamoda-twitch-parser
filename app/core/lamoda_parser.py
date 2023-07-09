@@ -2,7 +2,7 @@ import httpx
 from bs4 import BeautifulSoup
 
 from models.lamoda_models import Product
-from services.mongo import MongoDBService
+from core.mongo import MongoDBService
 
 
 async def parse_lamoda(category_url):

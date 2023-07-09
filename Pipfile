@@ -10,7 +10,7 @@ python-dotenv = "*"
 pymongo = "*"
 httpx = "*"
 beautifulsoup4 = "*"
-pydantic = "==1.*"
+pydantic = "*"
 kafka-python = "*"
 redis = "*"
 
