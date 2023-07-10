@@ -1,0 +1,6 @@
+__pycache__
+.idea
+.pytest_cache
+.env.example
+docker-compose.yml.example
+.gitignore
