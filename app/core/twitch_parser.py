@@ -1,7 +1,7 @@
 import httpx
 
 from config import settings
-from models.twitch_models import Category, Channel
+from models.twitch import Category, Channel
 from core.mongo import MongoDBService
 
 

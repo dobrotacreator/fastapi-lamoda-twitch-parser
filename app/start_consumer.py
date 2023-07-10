@@ -1,7 +1,7 @@
 import asyncio
 import logging
 
-from services.kafka_services import KafkaService
+from services.kafka import KafkaService
 
 if __name__ == "__main__":
     kafka = KafkaService()

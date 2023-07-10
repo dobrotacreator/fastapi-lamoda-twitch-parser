@@ -3,8 +3,8 @@ import logging
 from fastapi import APIRouter, HTTPException
 
 from core.mongo import MongoDBService
-from models.lamoda_models import Product, Task
-from services.kafka_services import KafkaService
+from models.lamoda import Product, Task
+from services.kafka import KafkaService
 
 router = APIRouter(prefix="/lamoda")
 mongo_service = MongoDBService()
@@ -24,7 +24,7 @@ async def create_product(product: Product):
     return {"message": "Product created successfully"}
 
 
-@router.get("/products")
+@router.get("/products", response_model=dict[str, list[Product]])
 async def get_products():
     cursor = mongo_service.find_documents("lamoda_products", {})
     products = []
@@ -34,7 +34,7 @@ async def get_products():
     return {"products": products}
 
 
-@router.get("/products/{product_id}")
+@router.get("/products/{product_id}", response_model=dict[str, Product])
 async def get_product(product_id: str):
     query = {"_id": product_id}
     product = mongo_service.find_documents("lamoda_products", query)

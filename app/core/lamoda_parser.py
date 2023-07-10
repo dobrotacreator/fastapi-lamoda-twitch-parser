@@ -1,7 +1,7 @@
 import httpx
 from bs4 import BeautifulSoup
 
-from models.lamoda_models import Product
+from models.lamoda import Product
 from core.mongo import MongoDBService
 
 

@@ -1,17 +1,17 @@
 from pydantic import BaseModel
 
+from utils.base_model import BaseWithTimeModel
+
 
 class Task(BaseModel):
     query: str
 
 
-class Category(BaseModel):
+class Category(BaseWithTimeModel):
     id: int
     name: str
-    created_at: str = None
 
 
-class Channel(BaseModel):
+class Channel(BaseWithTimeModel):
     channel_name: str
     game_name: str
-    created_at: str = None

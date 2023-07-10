@@ -1,8 +1,8 @@
 from fastapi import APIRouter, HTTPException
 
 from core.mongo import MongoDBService
-from models.twitch_models import Category, Channel, Task
-from services.kafka_services import KafkaService
+from models.twitch import Category, Channel, Task
+from services.kafka import KafkaService
 
 router = APIRouter(prefix="/twitch")
 mongo_service = MongoDBService()
@@ -21,7 +21,7 @@ async def create_category(category: Category):
     return {"message": "Category created successfully"}
 
 
-@router.get("/categories")
+@router.get("/categories", response_model=dict[str, list[Category]])
 async def get_categories():
     cursor = mongo_service.find_documents("twitch_categories", {})
     categories = []
@@ -31,7 +31,7 @@ async def get_categories():
     return {"categories": categories}
 
 
-@router.get("/categories/{category_id}")
+@router.get("/categories/{category_id}", response_model=dict[str, Category])
 async def get_category(category_id: str):
     query = {"_id": category_id}
     category = mongo_service.find_documents("twitch_categories", query)
@@ -61,7 +61,7 @@ async def create_channel(channel: Channel):
     return {"message": "Channel created successfully"}
 
 
-@router.get("/channels")
+@router.get("/channels", response_model=dict[str, list[Channel]])
 async def get_channels():
     cursor = mongo_service.find_documents("twitch_channels", {})
     channels = []
@@ -71,7 +71,7 @@ async def get_channels():
     return {"categories": channels}
 
 
-@router.get("/channels/{channel_id}")
+@router.get("/channels/{channel_id}", response_model=dict[str, Channel])
 async def get_channel(channel_id: str):
     query = {"_id": channel_id}
     channel = mongo_service.find_documents("twitch_channels", query)
