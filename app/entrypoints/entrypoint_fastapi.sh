@@ -1,8 +1,6 @@
 #!/bin/bash
 
-until mongo --quiet --eval "db.adminCommand('ping')" &>/dev/null; do
-  echo "Waiting for MongoDB..."
-  sleep 5
-done
+echo "Waiting for Kafka and MongoDB to be ready..."
+sleep 15
 
 python main.py

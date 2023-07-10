@@ -13,6 +13,9 @@ beautifulsoup4 = "*"
 pydantic = "*"
 kafka-python = "*"
 redis = "*"
+aiokafka = "*"
+aioredis = "*"
+pydantic-settings = "*"
 
 [dev-packages]
 pytest = "*"
