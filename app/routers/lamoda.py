@@ -1,17 +1,20 @@
+import logging
+
 from fastapi import APIRouter, HTTPException
 
 from core.mongo import MongoDBService
-from models.lamoda_models import Product, Task
+from models.lamoda import Product, Task
 from services.kafka import KafkaService
 
 router = APIRouter(prefix="/lamoda")
 mongo_service = MongoDBService()
+logging.basicConfig(level=logging.INFO)
 
 
 @router.post("/parsing_task")
 async def create_parsing_task(task: Task):
     kafka = KafkaService()
-    await kafka.send_message("parse", "core@parse_lamoda@" + task.category_url)
+    await kafka.send_message("parse", "core.lamoda_parser@parse_lamoda@" + task.category_url)
     return {"message": "Parsing task created successfully"}
 
 
@@ -21,13 +24,17 @@ async def create_product(product: Product):
     return {"message": "Product created successfully"}
 
 
-@router.get("/products")
+@router.get("/products", response_model=dict[str, list[Product]])
 async def get_products():
-    products = list(mongo_service.find_documents("lamoda_products", {}))
+    cursor = mongo_service.find_documents("lamoda_products", {})
+    products = []
+    for product in cursor:
+        product['_id'] = str(product['_id'])
+        products.append(product)
     return {"products": products}
 
 
-@router.get("/products/{product_id}")
+@router.get("/products/{product_id}", response_model=dict[str, Product])
 async def get_product(product_id: str):
     query = {"_id": product_id}
     product = mongo_service.find_documents("lamoda_products", query)

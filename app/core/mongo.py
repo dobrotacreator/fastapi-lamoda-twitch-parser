@@ -15,7 +15,7 @@ class MongoDBService:
 
     def insert_document(self, collection_name, document):
         collection = self.db[collection_name]
-        document["created_at"] = datetime.now().time()
+        document["created_at"] = str(datetime.now().time())
         collection.insert_one(document)
 
     def find_documents(self, collection_name, query):

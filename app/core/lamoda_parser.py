@@ -1,7 +1,7 @@
 import httpx
 from bs4 import BeautifulSoup
 
-from models.lamoda_models import Product
+from models.lamoda import Product
 from core.mongo import MongoDBService
 
 
@@ -18,9 +18,13 @@ async def parse_lamoda(category_url):
                 name = product.find('div', class_='x-product-card-description__product-name').text.strip()
                 brand = product.find('div', class_='x-product-card-description__brand-name').text.strip()
                 try:
-                    price = product.find('span', class_='x-product-card-description__price-single').text.strip()
+                    price = float(product.find(
+                        'span', class_='x-product-card-description__price-single'
+                    ).text.replace(' ', '').replace('₽', '').strip())
                 except AttributeError:
-                    price = float(product.find('span', class_='x-product-card-description__price-new').text.strip())
+                    price = float(product.find(
+                        'span', class_='x-product-card-description__price-new'
+                    ).text.replace(' ', '').replace('₽', '').strip())
 
                 product = Product(name=name, brand=brand, price=price)
                 # Insert the parsed data into MongoDB

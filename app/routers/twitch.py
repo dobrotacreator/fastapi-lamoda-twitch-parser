@@ -1,10 +1,18 @@
 from fastapi import APIRouter, HTTPException
 
 from core.mongo import MongoDBService
-from models.twitch_models import Category, Channel
+from models.twitch import Category, Channel, Task
+from services.kafka import KafkaService
 
 router = APIRouter(prefix="/twitch")
 mongo_service = MongoDBService()
+
+
+@router.post("/parsing_task")
+async def create_parsing_task(task: Task):
+    kafka = KafkaService()
+    await kafka.send_message("parse", "core.twitch_parser@get_streams_by_filter@" + task.query)
+    return {"message": "Parsing task created successfully"}
 
 
 @router.post("/categories")
@@ -13,13 +21,17 @@ async def create_category(category: Category):
     return {"message": "Category created successfully"}
 
 
-@router.get("/categories")
+@router.get("/categories", response_model=dict[str, list[Category]])
 async def get_categories():
-    categories = list(mongo_service.find_documents("twitch_categories", {}))
+    cursor = mongo_service.find_documents("twitch_categories", {})
+    categories = []
+    for category in cursor:
+        category['_id'] = str(category['_id'])
+        categories.append(category)
     return {"categories": categories}
 
 
-@router.get("/categories/{category_id}")
+@router.get("/categories/{category_id}", response_model=dict[str, Category])
 async def get_category(category_id: str):
     query = {"_id": category_id}
     category = mongo_service.find_documents("twitch_categories", query)
@@ -49,13 +61,17 @@ async def create_channel(channel: Channel):
     return {"message": "Channel created successfully"}
 
 
-@router.get("/channels")
+@router.get("/channels", response_model=dict[str, list[Channel]])
 async def get_channels():
-    channels = list(mongo_service.find_documents("twitch_channels", {}))
-    return {"channels": channels}
+    cursor = mongo_service.find_documents("twitch_channels", {})
+    channels = []
+    for channel in cursor:
+        channel['_id'] = str(channel['_id'])
+        channels.append(channel)
+    return {"categories": channels}
 
 
-@router.get("/channels/{channel_id}")
+@router.get("/channels/{channel_id}", response_model=dict[str, Channel])
 async def get_channel(channel_id: str):
     query = {"_id": channel_id}
     channel = mongo_service.find_documents("twitch_channels", query)

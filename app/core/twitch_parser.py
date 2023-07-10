@@ -1,11 +1,12 @@
 import httpx
 
 from config import settings
-from models.twitch_models import Category, Channel
+from models.twitch import Category, Channel
 from core.mongo import MongoDBService
 
 
-async def get_streams_by_filter(filter_type, query, limit=10):
+async def get_streams_by_filter(filter_type_with_query: str, limit=50):
+    filter_type, query = filter_type_with_query.split('&')
     token_url = "https://id.twitch.tv/oauth2/token"
     token_params = {
         "client_id": settings.twitch_settings.client_id,
