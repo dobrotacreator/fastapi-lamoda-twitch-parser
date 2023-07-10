@@ -9,3 +9,7 @@ COPY app /parser/
 FROM base as fastapi
 RUN chmod +x entrypoints/entrypoint_fastapi.sh
 CMD ["python", "main.py"]
+
+FROM base as consumer
+RUN chmod +x entrypoints/entrypoint_consumer.sh
+CMD ["python", "start_consumer.py"]

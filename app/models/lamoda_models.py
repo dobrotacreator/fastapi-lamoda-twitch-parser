@@ -9,3 +9,4 @@ class Product(BaseModel):
     name: str
     brand: str
     price: float
+    created_at: str = None

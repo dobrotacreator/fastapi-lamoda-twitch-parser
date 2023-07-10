@@ -1,10 +1,18 @@
 from fastapi import APIRouter, HTTPException
 
 from core.mongo import MongoDBService
-from models.twitch_models import Category, Channel
+from models.twitch_models import Category, Channel, Task
+from services.kafka_services import KafkaService
 
 router = APIRouter(prefix="/twitch")
 mongo_service = MongoDBService()
+
+
+@router.post("/parsing_task")
+async def create_parsing_task(task: Task):
+    kafka = KafkaService()
+    await kafka.send_message("parse", "core.twitch_parser@get_streams_by_filter@" + task.query)
+    return {"message": "Parsing task created successfully"}
 
 
 @router.post("/categories")
@@ -15,7 +23,11 @@ async def create_category(category: Category):
 
 @router.get("/categories")
 async def get_categories():
-    categories = list(mongo_service.find_documents("twitch_categories", {}))
+    cursor = mongo_service.find_documents("twitch_categories", {})
+    categories = []
+    for category in cursor:
+        category['_id'] = str(category['_id'])
+        categories.append(category)
     return {"categories": categories}
 
 
@@ -51,8 +63,12 @@ async def create_channel(channel: Channel):
 
 @router.get("/channels")
 async def get_channels():
-    channels = list(mongo_service.find_documents("twitch_channels", {}))
-    return {"channels": channels}
+    cursor = mongo_service.find_documents("twitch_channels", {})
+    channels = []
+    for channel in cursor:
+        channel['_id'] = str(channel['_id'])
+        channels.append(channel)
+    return {"categories": channels}
 
 
 @router.get("/channels/{channel_id}")
