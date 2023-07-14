@@ -3,10 +3,10 @@ name: Python Linters
 on:
   push:
     branches:
-      - main
+      - master
   pull_request:
     branches:
-      - main
+      - master
 
 jobs:
   lint:
@@ -30,4 +30,4 @@ jobs:
         run: flake8
 
       - name: Run Pylint
-        run: pylint your_script.py
+        run: pylint main.py
